@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
-import song from '../mainland';
-
-const songIds = Object.keys(song.data);
-const songData = Object.values(song.data);
+// import song from '../mainland';
 
 function App() {
   const [filter, setFilter] = useState('');
+  const [song, setSong] = useState<any[]>([]);
+  const songIds = Object.keys(song);
+  const songData = Object.values(song);
   const filterData = songData.filter(
     (data) => filter && (data[0].includes(filter) || data[1].includes(filter))
   );
+  useEffect(() => {
+    (window as any).System.import(`/mainland.json`).then((module: any) => {
+      const data = module.default.data;
+      setSong(data);
+    });
+  }, []);
   return (
     <div className="App">
       <input
